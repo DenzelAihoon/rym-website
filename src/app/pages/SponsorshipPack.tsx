@@ -7,6 +7,7 @@ import { Label } from '../components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
 import { Download, FileText } from 'lucide-react';
 import { toast } from 'sonner';
+import { supabase } from '../../supabaseClient';
 
 export default function SponsorshipPack() {
   const [loading, setLoading] = useState(false);
@@ -21,13 +22,33 @@ export default function SponsorshipPack() {
     e.preventDefault();
     setLoading(true);
 
-    setTimeout(() => {
-      toast.success('Download initiated!', {
+    try {
+      // Save to Supabase contacts table
+      await supabase.from('contacts').insert([{
+        name: formData.name,
+        email: formData.email,
+        subject: 'Sponsorship Pack Download',
+        message: `Organization: ${formData.organization || 'Not provided'} | Phone: ${formData.phone || 'Not provided'}`,
+      }]);
+
+      toast.success('Download starting!', {
         description: 'The sponsorship pack is being downloaded.',
       });
-      // In a real application, this would trigger the actual download
+
+      // Trigger actual PDF download
+      const link = document.createElement('a');
+      link.href = '/sponsorship-pack.pdf';
+      link.download = 'RYM-Sponsorship-Pack-2026.pdf';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+    } catch (error) {
+      console.error(error);
+      toast.error('Something went wrong. Please try again.');
+    } finally {
       setLoading(false);
-    }, 1000);
+    }
   };
 
   return (
@@ -55,42 +76,21 @@ export default function SponsorshipPack() {
               </CardHeader>
               <CardContent>
                 <ul className="space-y-3">
-                  <li className="flex items-start">
-                    <div className="bg-[#0d5a5a] rounded-full p-1 mr-3 mt-0.5">
-                      <div className="w-2 h-2 bg-white rounded-full"></div>
-                    </div>
-                    <span>Detailed breakdown of all sponsorship tiers</span>
-                  </li>
-                  <li className="flex items-start">
-                    <div className="bg-[#0d5a5a] rounded-full p-1 mr-3 mt-0.5">
-                      <div className="w-2 h-2 bg-white rounded-full"></div>
-                    </div>
-                    <span>Complete list of benefits and exposure opportunities</span>
-                  </li>
-                  <li className="flex items-start">
-                    <div className="bg-[#0d5a5a] rounded-full p-1 mr-3 mt-0.5">
-                      <div className="w-2 h-2 bg-white rounded-full"></div>
-                    </div>
-                    <span>Event timeline and key dates</span>
-                  </li>
-                  <li className="flex items-start">
-                    <div className="bg-[#0d5a5a] rounded-full p-1 mr-3 mt-0.5">
-                      <div className="w-2 h-2 bg-white rounded-full"></div>
-                    </div>
-                    <span>Previous year's impact statistics</span>
-                  </li>
-                  <li className="flex items-start">
-                    <div className="bg-[#0d5a5a] rounded-full p-1 mr-3 mt-0.5">
-                      <div className="w-2 h-2 bg-white rounded-full"></div>
-                    </div>
-                    <span>Media coverage and reach information</span>
-                  </li>
-                  <li className="flex items-start">
-                    <div className="bg-[#0d5a5a] rounded-full p-1 mr-3 mt-0.5">
-                      <div className="w-2 h-2 bg-white rounded-full"></div>
-                    </div>
-                    <span>Custom partnership opportunities</span>
-                  </li>
+                  {[
+                    'Detailed breakdown of all sponsorship tiers',
+                    'Complete list of benefits and exposure opportunities',
+                    'Event timeline and key dates',
+                    "Previous year's impact statistics",
+                    'Media coverage and reach information',
+                    'Custom partnership opportunities',
+                  ].map((item, index) => (
+                    <li key={index} className="flex items-start">
+                      <div className="bg-[#0d5a5a] rounded-full p-1 mr-3 mt-0.5">
+                        <div className="w-2 h-2 bg-white rounded-full"></div>
+                      </div>
+                      <span>{item}</span>
+                    </li>
+                  ))}
                 </ul>
               </CardContent>
             </Card>
