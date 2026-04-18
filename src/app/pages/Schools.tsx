@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { Card, CardContent } from '../components/ui/card';
-import { Badge } from '../components/ui/badge';
 import { School, MapPin, Users } from 'lucide-react';
 import { supabase } from '../../supabaseClient';
 
@@ -19,6 +18,7 @@ export default function Schools() {
       const { data, error } = await supabase
         .from('schools')
         .select('*')
+        .eq('status', 'approved')
         .order('created_at', { ascending: false });
 
       if (error) throw error;
@@ -50,7 +50,7 @@ export default function Schools() {
             </div>
           ) : schools.length === 0 ? (
             <div className="text-center py-12">
-              <p className="text-gray-500 text-lg">No schools registered yet.</p>
+              <p className="text-gray-500 text-lg">No approved schools yet.</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -61,9 +61,9 @@ export default function Schools() {
                       <div className="bg-[#0d5a5a] p-3 rounded-lg">
                         <School className="h-6 w-6 text-white" />
                       </div>
-                      <Badge variant={school.status === 'approved' ? 'default' : 'secondary'}>
-                        {school.status}
-                      </Badge>
+                      <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full font-medium">
+                        Approved ✓
+                      </span>
                     </div>
                     <h3 className="text-xl font-bold text-gray-900 mb-3">{school.name}</h3>
                     <div className="space-y-2 text-sm text-gray-600">

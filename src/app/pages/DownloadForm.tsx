@@ -7,6 +7,7 @@ import { Label } from '../components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
 import { Download, FileText, CheckCircle } from 'lucide-react';
 import { toast } from 'sonner';
+import { supabase } from '../../supabaseClient';
 
 export default function DownloadForm() {
   const [loading, setLoading] = useState(false);
@@ -20,13 +21,33 @@ export default function DownloadForm() {
     e.preventDefault();
     setLoading(true);
 
-    setTimeout(() => {
-      toast.success('Download initiated!', {
+    try {
+      // Save download request to Supabase
+      await supabase.from('contacts').insert([{
+        name: formData.name,
+        email: formData.email,
+        subject: 'Guidebook Download',
+        message: `School: ${formData.school || 'Not provided'}`,
+      }]);
+
+      toast.success('Download starting!', {
         description: 'The RYM Guidebook is being downloaded.',
       });
-      // In a real application, this would trigger the actual download
+
+      // Trigger actual PDF download
+      const link = document.createElement('a');
+      link.href = '/guidebook.pdf';
+      link.download = 'RYM-Guidebook-2026.pdf';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+    } catch (error) {
+      console.error(error);
+      toast.error('Something went wrong. Please try again.');
+    } finally {
       setLoading(false);
-    }, 1000);
+    }
   };
 
   return (

@@ -1,4 +1,3 @@
-import { Link } from 'react-router';
 import { Button } from '../ui/button';
 import { FileText, Download, CheckCircle } from 'lucide-react';
 
@@ -36,12 +35,12 @@ export default function GuidebookSection() {
               ))}
             </ul>
 
-            <Link to="/download-form">
+            <a href="/guidebook.pdf" download="RYM-Guidebook-2026.pdf">
               <Button size="lg" className="bg-[#fbbf24] text-black hover:bg-[#f59e0b]">
                 <Download className="mr-2 h-5 w-5" />
                 Download Guidebook (PDF)
               </Button>
-            </Link>
+            </a>
           </div>
 
           <div className="flex justify-center">
