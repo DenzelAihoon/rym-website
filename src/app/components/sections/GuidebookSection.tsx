@@ -1,13 +1,13 @@
-import { Button } from '../ui/button';
-import { FileText, Download, CheckCircle } from 'lucide-react';
+import { Button } from "../ui/button";
+import { FileText, Download, CheckCircle } from "lucide-react";
 
 export default function GuidebookSection() {
   const features = [
-    'Complete competition rules and regulations',
-    'Sample questions and practice materials',
-    'Registration guidelines and deadlines',
-    'Scoring system and judging criteria',
-    'Important dates and schedule',
+    "Complete competition rules and regulations",
+    "Sample questions and practice materials",
+    "Registration guidelines and deadlines",
+    "Scoring system and judging criteria",
+    "Important dates and schedule",
   ];
 
   return (
@@ -22,8 +22,9 @@ export default function GuidebookSection() {
               Competition Guidebook
             </h2>
             <p className="text-xl text-gray-200 mb-8">
-              Everything you need to know about participating in Rack Your Mind 2026.
-              Download our comprehensive guidebook for detailed information.
+              Everything you need to know about participating in Rack Your Mind
+              2026. Download our comprehensive guidebook for detailed
+              information.
             </p>
 
             <ul className="space-y-4 mb-8">
@@ -36,7 +37,10 @@ export default function GuidebookSection() {
             </ul>
 
             <a href="/guidebook.pdf" download="RYM-Guidebook-2026.pdf">
-              <Button size="lg" className="bg-[#fbbf24] text-black hover:bg-[#f59e0b]">
+              <Button
+                size="lg"
+                className="bg-[#fbbf24] text-black hover:bg-[#f59e0b]"
+              >
                 <Download className="mr-2 h-5 w-5" />
                 Download Guidebook (PDF)
               </Button>
@@ -48,7 +52,9 @@ export default function GuidebookSection() {
               <div className="bg-white rounded-xl p-12 shadow-lg transform hover:scale-105 transition-transform">
                 <div className="text-center">
                   <FileText className="h-32 w-32 text-[#0d5a5a] mx-auto mb-4" />
-                  <p className="text-[#0d5a5a] font-bold text-xl">RYM Guidebook 2026</p>
+                  <p className="text-[#0d5a5a] font-bold text-xl">
+                    RYM Guidebook 2026
+                  </p>
                   <p className="text-gray-600 mt-2">Comprehensive Guide</p>
                 </div>
               </div>
