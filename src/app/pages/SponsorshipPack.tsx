@@ -1,21 +1,27 @@
-import { useState } from 'react';
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
-import { Button } from '../components/ui/button';
-import { Input } from '../components/ui/input';
-import { Label } from '../components/ui/label';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
-import { Download, FileText } from 'lucide-react';
-import { toast } from 'sonner';
-import { supabase } from '../../supabaseClient';
+import { useState } from "react";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
+import { Button } from "../components/ui/button";
+import { Input } from "../components/ui/input";
+import { Label } from "../components/ui/label";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "../components/ui/card";
+import { Download, FileText } from "lucide-react";
+import { toast } from "sonner";
+import { supabase } from "../../supabaseClient";
 
 export default function SponsorshipPack() {
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
-    name: '',
-    organization: '',
-    email: '',
-    phone: '',
+    name: "",
+    organization: "",
+    email: "",
+    phone: "",
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -24,28 +30,29 @@ export default function SponsorshipPack() {
 
     try {
       // Save to Supabase contacts table
-      await supabase.from('contacts').insert([{
-        name: formData.name,
-        email: formData.email,
-        subject: 'Sponsorship Pack Download',
-        message: `Organization: ${formData.organization || 'Not provided'} | Phone: ${formData.phone || 'Not provided'}`,
-      }]);
+      await supabase.from("contacts").insert([
+        {
+          name: formData.name,
+          email: formData.email,
+          subject: "Sponsorship Pack Download",
+          message: `Organization: ${formData.organization || "Not provided"} | Phone: ${formData.phone || "Not provided"}`,
+        },
+      ]);
 
-      toast.success('Download starting!', {
-        description: 'The sponsorship pack is being downloaded.',
+      toast.success("Download starting!", {
+        description: "The sponsorship pack is being downloaded.",
       });
 
       // Trigger actual PDF download
-      const link = document.createElement('a');
-      link.href = '/sponsorship-pack.pdf';
-      link.download = 'RYM-Sponsorship-Pack-2026.pdf';
+      const link = document.createElement("a");
+      link.href = "/sponsorship-pack.pdf";
+      link.download = "RYM-Sponsorship-Pack-2026.pdf";
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-
     } catch (error) {
       console.error(error);
-      toast.error('Something went wrong. Please try again.');
+      toast.error("Something went wrong. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -72,17 +79,19 @@ export default function SponsorshipPack() {
             <Card>
               <CardHeader>
                 <CardTitle>What's Included</CardTitle>
-                <CardDescription>Complete sponsorship information</CardDescription>
+                <CardDescription>
+                  Complete sponsorship information
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <ul className="space-y-3">
                   {[
-                    'Detailed breakdown of all sponsorship tiers',
-                    'Complete list of benefits and exposure opportunities',
-                    'Event timeline and key dates',
+                    "Detailed breakdown of all sponsorship tiers",
+                    "Complete list of benefits and exposure opportunities",
+                    "Event timeline and key dates",
                     "Previous year's impact statistics",
-                    'Media coverage and reach information',
-                    'Custom partnership opportunities',
+                    "Media coverage and reach information",
+                    "Custom partnership opportunities",
                   ].map((item, index) => (
                     <li key={index} className="flex items-start">
                       <div className="bg-[#0d5a5a] rounded-full p-1 mr-3 mt-0.5">
@@ -98,7 +107,9 @@ export default function SponsorshipPack() {
             <Card>
               <CardHeader>
                 <CardTitle>Download Form</CardTitle>
-                <CardDescription>Enter your details to access the sponsorship pack</CardDescription>
+                <CardDescription>
+                  Enter your details to access the sponsorship pack
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <form onSubmit={handleSubmit} className="space-y-4">
@@ -107,7 +118,9 @@ export default function SponsorshipPack() {
                     <Input
                       id="name"
                       value={formData.name}
-                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      onChange={(e) =>
+                        setFormData({ ...formData, name: e.target.value })
+                      }
                       required
                     />
                   </div>
@@ -116,7 +129,12 @@ export default function SponsorshipPack() {
                     <Input
                       id="organization"
                       value={formData.organization}
-                      onChange={(e) => setFormData({ ...formData, organization: e.target.value })}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          organization: e.target.value,
+                        })
+                      }
                     />
                   </div>
                   <div>
@@ -125,7 +143,9 @@ export default function SponsorshipPack() {
                       id="email"
                       type="email"
                       value={formData.email}
-                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                      onChange={(e) =>
+                        setFormData({ ...formData, email: e.target.value })
+                      }
                       required
                     />
                   </div>
@@ -135,7 +155,9 @@ export default function SponsorshipPack() {
                       id="phone"
                       type="tel"
                       value={formData.phone}
-                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                      onChange={(e) =>
+                        setFormData({ ...formData, phone: e.target.value })
+                      }
                     />
                   </div>
                   <Button
@@ -145,7 +167,7 @@ export default function SponsorshipPack() {
                     disabled={loading}
                   >
                     <Download className="mr-2 h-5 w-5" />
-                    {loading ? 'Preparing...' : 'Download Sponsorship Pack'}
+                    {loading ? "Preparing..." : "Download Sponsorship Pack"}
                   </Button>
                 </form>
               </CardContent>

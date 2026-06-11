@@ -1,21 +1,46 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router';
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
-import { Button } from '../components/ui/button';
-import { Input } from '../components/ui/input';
-import { Label } from '../components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
-import { Textarea } from '../components/ui/textarea';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
-import { Plus, Trash2 } from 'lucide-react';
-import { toast } from 'sonner';
-import { supabase } from '../../supabaseClient';
+import { useState } from "react";
+import { useNavigate } from "react-router";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
+import { Button } from "../components/ui/button";
+import { Input } from "../components/ui/input";
+import { Label } from "../components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../components/ui/select";
+import { Textarea } from "../components/ui/textarea";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "../components/ui/card";
+import { Plus, Trash2 } from "lucide-react";
+import { toast } from "sonner";
+import { supabase } from "../../supabaseClient";
 
 const GHANA_REGIONS = [
-  'Greater Accra', 'Ashanti', 'Western', 'Central', 'Eastern', 'Northern',
-  'Upper East', 'Upper West', 'Volta', 'Bono', 'Bono East', 'Ahafo',
-  'Western North', 'Oti', 'Savannah', 'North East'
+  "Greater Accra",
+  "Ashanti",
+  "Western",
+  "Central",
+  "Eastern",
+  "Northern",
+  "Upper East",
+  "Upper West",
+  "Volta",
+  "Bono",
+  "Bono East",
+  "Ahafo",
+  "Western North",
+  "Oti",
+  "Savannah",
+  "North East",
 ];
 
 interface Student {
@@ -28,30 +53,35 @@ interface Student {
 export default function Register() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const [schoolName, setSchoolName] = useState('');
-  const [schoolType, setSchoolType] = useState('');
-  const [region, setRegion] = useState('');
-  const [district, setDistrict] = useState('');
-  const [address, setAddress] = useState('');
-  const [contactPerson, setContactPerson] = useState('');
-  const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
+  const [schoolName, setSchoolName] = useState("");
+  const [schoolType, setSchoolType] = useState("");
+  const [region, setRegion] = useState("");
+  const [district, setDistrict] = useState("");
+  const [address, setAddress] = useState("");
+  const [contactPerson, setContactPerson] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [students, setStudents] = useState<Student[]>([
-    { id: '1', name: '', class: '', dob: '' }
+    { id: "1", name: "", class: "", dob: "" },
   ]);
 
   const addStudent = () => {
-    setStudents([...students, { id: Date.now().toString(), name: '', class: '', dob: '' }]);
+    setStudents([
+      ...students,
+      { id: Date.now().toString(), name: "", class: "", dob: "" },
+    ]);
   };
 
   const removeStudent = (id: string) => {
     if (students.length > 1) {
-      setStudents(students.filter(s => s.id !== id));
+      setStudents(students.filter((s) => s.id !== id));
     }
   };
 
   const updateStudent = (id: string, field: keyof Student, value: string) => {
-    setStudents(students.map(s => s.id === id ? { ...s, [field]: value } : s));
+    setStudents(
+      students.map((s) => (s.id === id ? { ...s, [field]: value } : s)),
+    );
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -61,51 +91,54 @@ export default function Register() {
     try {
       // Step 1: Insert school
       const { data: schoolData, error: schoolError } = await supabase
-        .from('schools')
-        .insert([{
-          name: schoolName,
-          email: email,
-          phone: phone,
-          address: address,
-          region: region,
-          principal_name: contactPerson,
-          student_count: students.length,
-          status: 'pending',
-        }])
+        .from("schools")
+        .insert([
+          {
+            name: schoolName,
+            email: email,
+            phone: phone,
+            address: address,
+            region: region,
+            principal_name: contactPerson,
+            student_count: students.length,
+            status: "pending",
+          },
+        ])
         .select()
         .single();
 
       if (schoolError) {
-        console.error('School error:', schoolError);
+        console.error("School error:", schoolError);
         throw schoolError;
       }
 
       // Step 2: Insert students
-      const studentsData = students.map(student => ({
+      const studentsData = students.map((student) => ({
         name: student.name,
         school_id: schoolData.id,
         grade: student.class,
-        status: 'pending',
+        status: "pending",
       }));
 
       const { error: studentsError } = await supabase
-        .from('students')
+        .from("students")
         .insert(studentsData);
 
       if (studentsError) {
-        console.error('Students error:', studentsError);
+        console.error("Students error:", studentsError);
         throw studentsError;
       }
 
-      toast.success('Registration submitted successfully!', {
+      toast.success("Registration submitted successfully!", {
         description: `${schoolName} registered with ${students.length} student(s).`,
       });
 
-      navigate('/schools');
-
+      navigate("/schools");
     } catch (error: any) {
-      console.error('Full error:', error);
-      toast.error(`Error: ${error?.message || 'Something went wrong. Please try again.'}`);
+      console.error("Full error:", error);
+      toast.error(
+        `Error: ${error?.message || "Something went wrong. Please try again."}`,
+      );
     } finally {
       setLoading(false);
     }
@@ -129,7 +162,9 @@ export default function Register() {
             <Card>
               <CardHeader>
                 <CardTitle>School Information</CardTitle>
-                <CardDescription>Enter your school's basic details</CardDescription>
+                <CardDescription>
+                  Enter your school's basic details
+                </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
@@ -164,7 +199,10 @@ export default function Register() {
                       </SelectTrigger>
                       <SelectContent>
                         {GHANA_REGIONS.map((r) => (
-                          <SelectItem key={r} value={r.toLowerCase().replace(/\s+/g, '-')}>
+                          <SelectItem
+                            key={r}
+                            value={r.toLowerCase().replace(/\s+/g, "-")}
+                          >
                             {r}
                           </SelectItem>
                         ))}
@@ -231,11 +269,16 @@ export default function Register() {
             <Card>
               <CardHeader>
                 <CardTitle>Student Information</CardTitle>
-                <CardDescription>Add students participating in the competition</CardDescription>
+                <CardDescription>
+                  Add students participating in the competition
+                </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 {students.map((student, index) => (
-                  <div key={student.id} className="p-4 border rounded-lg space-y-4">
+                  <div
+                    key={student.id}
+                    className="p-4 border rounded-lg space-y-4"
+                  >
                     <div className="flex justify-between items-center">
                       <h4 className="font-semibold">Student {index + 1}</h4>
                       {students.length > 1 && (
@@ -254,7 +297,9 @@ export default function Register() {
                         <Label>Student Name *</Label>
                         <Input
                           value={student.name}
-                          onChange={(e) => updateStudent(student.id, 'name', e.target.value)}
+                          onChange={(e) =>
+                            updateStudent(student.id, "name", e.target.value)
+                          }
                           required
                         />
                       </div>
@@ -262,7 +307,9 @@ export default function Register() {
                         <Label>Class *</Label>
                         <Input
                           value={student.class}
-                          onChange={(e) => updateStudent(student.id, 'class', e.target.value)}
+                          onChange={(e) =>
+                            updateStudent(student.id, "class", e.target.value)
+                          }
                           placeholder="e.g., Form 2"
                           required
                         />
@@ -272,14 +319,21 @@ export default function Register() {
                         <Input
                           type="date"
                           value={student.dob}
-                          onChange={(e) => updateStudent(student.id, 'dob', e.target.value)}
+                          onChange={(e) =>
+                            updateStudent(student.id, "dob", e.target.value)
+                          }
                           required
                         />
                       </div>
                     </div>
                   </div>
                 ))}
-                <Button type="button" variant="outline" onClick={addStudent} className="w-full">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={addStudent}
+                  className="w-full"
+                >
                   <Plus className="h-4 w-4 mr-2" />
                   Add Another Student
                 </Button>
@@ -292,7 +346,7 @@ export default function Register() {
               className="w-full bg-[#0d5a5a] hover:bg-[#0a4848]"
               disabled={loading}
             >
-              {loading ? 'Submitting...' : 'Submit Registration'}
+              {loading ? "Submitting..." : "Submit Registration"}
             </Button>
           </form>
         </div>

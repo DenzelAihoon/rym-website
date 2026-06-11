@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react';
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
-import { Card, CardContent } from '../components/ui/card';
-import { School, MapPin, Users } from 'lucide-react';
-import { supabase } from '../../supabaseClient';
+import { useState, useEffect } from "react";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
+import { Card, CardContent } from "../components/ui/card";
+import { School, MapPin, Users } from "lucide-react";
+import { supabase } from "../../supabaseClient";
 
 export default function Schools() {
   const [schools, setSchools] = useState<any[]>([]);
@@ -16,15 +16,15 @@ export default function Schools() {
   const fetchSchools = async () => {
     try {
       const { data, error } = await supabase
-        .from('schools')
-        .select('*')
-        .eq('status', 'approved')
-        .order('created_at', { ascending: false });
+        .from("schools")
+        .select("*")
+        .eq("status", "approved")
+        .order("created_at", { ascending: false });
 
       if (error) throw error;
       setSchools(data || []);
     } catch (error) {
-      console.error('Error fetching schools:', error);
+      console.error("Error fetching schools:", error);
     } finally {
       setLoading(false);
     }
@@ -65,7 +65,9 @@ export default function Schools() {
                         Approved ✓
                       </span>
                     </div>
-                    <h3 className="text-xl font-bold text-gray-900 mb-3">{school.name}</h3>
+                    <h3 className="text-xl font-bold text-gray-900 mb-3">
+                      {school.name}
+                    </h3>
                     <div className="space-y-2 text-sm text-gray-600">
                       <div className="flex items-center">
                         <MapPin className="h-4 w-4 mr-2" />
