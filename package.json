@@ -4,8 +4,8 @@
   "version": "0.0.1",
   "type": "module",
   "scripts": {
-    "build": "npx --yes vite build",
-    "dev": "npx --yes vite"
+    "build": "vite build",
+    "dev": "vite"
   },
   "dependencies": {
     "@emotion/react": "11.14.0",
